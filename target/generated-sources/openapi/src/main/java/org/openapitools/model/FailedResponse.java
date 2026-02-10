@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  * FailedResponse
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-10T04:53:43.265236298Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-10T04:56:14.691566349Z[Etc/UTC]")
 public class FailedResponse implements Response200, Response200ForConsentRevocation, Response200ForConsentSearch, Response200ForEnrichEventPolling, Response200ForEnrichEventSubscription, Response200ForEventSubscriptionValidation, Response200ForEventValidation, Response200ForIssueRefreshToken, Response200ForPreProcessConsentCreation, Response200ForPreProcessFileUpload, Response200ForResponseAlternation, Response200ForValidateAuthorizationRequest {
 
   private String responseId;

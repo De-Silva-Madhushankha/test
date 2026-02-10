@@ -21,7 +21,7 @@ import javax.annotation.Generated;
 
 @Schema(name = "SuccessResponseClientProcess_data", description = "Defines the success response.")
 @JsonTypeName("SuccessResponseClientProcess_data")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-10T04:53:43.265236298Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-10T04:56:14.691566349Z[Etc/UTC]")
 public class SuccessResponseClientProcessData {
 
   private Object clientData;

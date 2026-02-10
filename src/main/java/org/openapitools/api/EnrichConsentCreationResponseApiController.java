@@ -2,6 +2,7 @@ package org.openapitools.api;
 
 import org.openapitools.config.ScaConfiguration;
 import org.openapitools.model.EnrichConsentCreationRequestBody;
+import org.openapitools.model.RequestForEnrichConsentCreationResponse;
 import org.openapitools.model.ErrorResponse;
 import org.openapitools.model.Response200ForResponseAlternation;
 import org.openapitools.model.SuccessResponseForResponseAlternation;
@@ -105,14 +106,9 @@ public class EnrichConsentCreationResponseApiController implements EnrichConsent
      */
     private String extractConsentId(EnrichConsentCreationRequestBody requestBody) {
         // Try to extract consent ID from the data object
-        Object data = requestBody.getData();
-        if (data instanceof Map) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> dataMap = (Map<String, Object>) data;
-            Object consentId = dataMap.get("consentId");
-            if (consentId != null) {
-                return consentId.toString();
-            }
+        RequestForEnrichConsentCreationResponse data = requestBody.getData();
+        if (data != null && data.getConsentId() != null) {
+            return data.getConsentId();
         }
         // Default to using request ID as fallback
         return requestBody.getRequestId();
