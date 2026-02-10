@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  * SuccessResponseForConsentSearch
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-10T04:59:49.370250334Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-10T05:01:11.155796089Z[Etc/UTC]")
 public class SuccessResponseForConsentSearch implements Response200ForConsentSearch {
 
   private String responseId;
