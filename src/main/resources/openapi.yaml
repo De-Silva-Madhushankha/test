@@ -823,6 +823,96 @@ paths:
       - application/json
       x-tags:
       - tag: Consent
+  /get-consent-status:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsentStatusRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response200ForConsentStatus"
+          description: Ok
+        "400":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: invalid_request
+                errorDescription: Data is missing
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: server_error
+                errorDescription: Failed to process the response
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Server Error
+      summary: retrieve consent status after TPP redirection
+      tags:
+      - Consent
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Consent
+  /get-consent-content:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsentContentRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response200ForConsentContent"
+          description: Ok
+        "400":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: invalid_request
+                errorDescription: Data is missing
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: server_error
+                errorDescription: Failed to process the response
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Server Error
+      summary: retrieve consent content after TPP redirection
+      tags:
+      - Consent
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Consent
   /populate-consent-authorize-screen:
     post:
       requestBody:
@@ -1655,6 +1745,34 @@ components:
           description: query params
           type: object
       type: object
+    ConsentStatusData:
+      example:
+        consentId: consent-uuid-12345
+        requestHeaders: "{}"
+      properties:
+        consentId:
+          description: The unique identifier of the consent resource
+          type: string
+        requestHeaders:
+          description: Request headers sent by the TPP
+          type: object
+      required:
+      - consentId
+      type: object
+    ConsentContentData:
+      example:
+        consentId: consent-uuid-12345
+        requestHeaders: "{}"
+      properties:
+        consentId:
+          description: The unique identifier of the consent resource
+          type: string
+        requestHeaders:
+          description: Request headers sent by the TPP
+          type: object
+      required:
+      - consentId
+      type: object
     PopulateConsentAuthorizeScreenData:
       example:
         consentId: An UUID
@@ -1893,6 +2011,61 @@ components:
           type: string
         data:
           $ref: "#/components/schemas/SuccessResponseForConsentSearchData"
+      required:
+      - data
+      - responseId
+      - status
+      type: object
+    SuccessResponseForConsentStatus:
+      example:
+        data:
+          consentId: consent-uuid-12345
+          status: authorized
+          createdTime: 1707523200000
+          updatedTime: 1707526800000
+        responseId: responseId
+        status: SUCCESS
+      properties:
+        responseId:
+          type: string
+        status:
+          enum:
+          - SUCCESS
+          type: string
+        data:
+          $ref: "#/components/schemas/SuccessResponseForConsentStatusData"
+      required:
+      - data
+      - responseId
+      - status
+      type: object
+    SuccessResponseForConsentContent:
+      example:
+        data:
+          consentId: consent-uuid-12345
+          consentResource:
+            updatedTime: 6
+            validityTime: 5
+            clientId: clientId
+            createdTime: 0
+            receipt: "{}"
+            recurringIndicator: true
+            attributes: "{}"
+            id: id
+            type: type
+            status: status
+            frequency: 1
+        responseId: responseId
+        status: SUCCESS
+      properties:
+        responseId:
+          type: string
+        status:
+          enum:
+          - SUCCESS
+          type: string
+        data:
+          $ref: "#/components/schemas/SuccessResponseForConsentContentData"
       required:
       - data
       - responseId
@@ -2234,6 +2407,40 @@ components:
       - data
       - requestId
       type: object
+    ConsentStatusRequestBody:
+      example:
+        data:
+          consentId: consent-uuid-12345
+          requestHeaders: "{}"
+        requestId: Ec1wMjmiG8
+      properties:
+        requestId:
+          description: A unique correlation identifier
+          example: Ec1wMjmiG8
+          type: string
+        data:
+          $ref: "#/components/schemas/ConsentStatusData"
+      required:
+      - data
+      - requestId
+      type: object
+    ConsentContentRequestBody:
+      example:
+        data:
+          consentId: consent-uuid-12345
+          requestHeaders: "{}"
+        requestId: Ec1wMjmiG8
+      properties:
+        requestId:
+          description: A unique correlation identifier
+          example: Ec1wMjmiG8
+          type: string
+        data:
+          $ref: "#/components/schemas/ConsentContentData"
+      required:
+      - data
+      - requestId
+      type: object
     PopulateConsentAuthorizeScreenRequestBody:
       example:
         data:
@@ -2406,6 +2613,16 @@ components:
       - $ref: "#/components/schemas/SuccessResponseForConsentSearch"
       - $ref: "#/components/schemas/FailedResponse"
       x-one-of-name: Response200ForConsentSearch
+    Response200ForConsentStatus:
+      oneOf:
+      - $ref: "#/components/schemas/SuccessResponseForConsentStatus"
+      - $ref: "#/components/schemas/FailedResponse"
+      x-one-of-name: Response200ForConsentStatus
+    Response200ForConsentContent:
+      oneOf:
+      - $ref: "#/components/schemas/SuccessResponseForConsentContent"
+      - $ref: "#/components/schemas/FailedResponse"
+      x-one-of-name: Response200ForConsentContent
     Response200:
       oneOf:
       - $ref: "#/components/schemas/SuccessResponse"
@@ -2517,6 +2734,56 @@ components:
         enrichedSearchResult:
           description: Enriched search result
           type: object
+      type: object
+    SuccessResponseForConsentStatusData:
+      example:
+        consentId: consent-uuid-12345
+        status: authorized
+        createdTime: 1707523200000
+        updatedTime: 1707526800000
+      properties:
+        consentId:
+          description: The unique identifier of the consent resource
+          type: string
+        status:
+          description: Current status of the consent (e.g., authorized, revoked, expired)
+          type: string
+        createdTime:
+          description: Timestamp when the consent was created
+          format: int64
+          type: integer
+        updatedTime:
+          description: Timestamp when the consent was last updated
+          format: int64
+          type: integer
+      required:
+      - consentId
+      - status
+      type: object
+    SuccessResponseForConsentContentData:
+      example:
+        consentId: consent-uuid-12345
+        consentResource:
+          updatedTime: 6
+          validityTime: 5
+          clientId: clientId
+          createdTime: 0
+          receipt: "{}"
+          recurringIndicator: true
+          attributes: "{}"
+          id: id
+          type: type
+          status: status
+          frequency: 1
+      properties:
+        consentId:
+          description: The unique identifier of the consent resource
+          type: string
+        consentResource:
+          $ref: "#/components/schemas/StoredBasicConsentResourceData"
+      required:
+      - consentId
+      - consentResource
       type: object
     SuccessResponseWithDetailedConsentData:
       example:
