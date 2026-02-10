@@ -7,6 +7,8 @@ import org.openapitools.model.ErrorResponse;
 import org.openapitools.model.Response200ForResponseAlternation;
 import org.openapitools.model.SuccessResponseForResponseAlternation;
 import org.openapitools.model.SuccessResponseForResponseAlternationData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,8 @@ import javax.annotation.Generated;
 @Controller
 @RequestMapping("${openapi.aPIContractForFinancialAcceleratorExtensionPointsInWSO2ISAndAPIM.base-path:/wso2-f5b/OB4/1.0.0}")
 public class EnrichConsentCreationResponseApiController implements EnrichConsentCreationResponseApi {
+
+    private static final Logger logger = LoggerFactory.getLogger(EnrichConsentCreationResponseApiController.class);
 
     private final NativeWebRequest request;
     private final ScaConfiguration scaConfiguration;
@@ -97,6 +101,7 @@ public class EnrichConsentCreationResponseApiController implements EnrichConsent
             
         } catch (Exception e) {
             // Log error and return pass-through response
+            logger.error("Error processing SCA redirect for consent creation: {}", e.getMessage(), e);
             return passThrough(enrichConsentCreationRequestBody);
         }
     }
@@ -118,13 +123,19 @@ public class EnrichConsentCreationResponseApiController implements EnrichConsent
      * Builds the ASPSP SCA authorisation URL with consent ID parameter
      */
     private String buildScaRedirectUrl(String consentId) {
-        String baseUrl = scaConfiguration.getAspspAuthUrl();
-        
-        // Add consent ID as query parameter
-        if (baseUrl.contains("?")) {
-            return baseUrl + "&consentId=" + consentId;
-        } else {
-            return baseUrl + "?consentId=" + consentId;
+        try {
+            String baseUrl = scaConfiguration.getAspspAuthUrl();
+            String encodedConsentId = java.net.URLEncoder.encode(consentId, java.nio.charset.StandardCharsets.UTF_8);
+            
+            // Add consent ID as query parameter
+            if (baseUrl.contains("?")) {
+                return baseUrl + "&consentId=" + encodedConsentId;
+            } else {
+                return baseUrl + "?consentId=" + encodedConsentId;
+            }
+        } catch (Exception e) {
+            // If encoding fails, return base URL without consent ID
+            return scaConfiguration.getAspspAuthUrl();
         }
     }
 

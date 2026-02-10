@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "ErrorMapperData", description = "Defines the context data related to the errors.")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-10T04:56:14.691566349Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-10T04:59:49.370250334Z[Etc/UTC]")
 public class ErrorMapperData {
 
   private Error error;

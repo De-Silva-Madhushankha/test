@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
  */
 
 @Schema(name = "Account", description = "A user account or resource representation")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-10T04:56:14.691566349Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-10T04:59:49.370250334Z[Etc/UTC]")
 public class Account {
 
   private String displayName;

@@ -178,4 +178,36 @@ public class EnrichConsentCreationResponseApiControllerTest {
         assertNotNull(responseData.getScaRedirectUrl());
         assertTrue(responseData.getScaRedirectUrl().contains("fallback-id-123"));
     }
+
+    @Test
+    public void testUrlEncodingForSpecialCharacters() {
+        // Arrange
+        EnrichConsentCreationRequestBody requestBody = new EnrichConsentCreationRequestBody();
+        requestBody.setRequestId("test-request-special");
+        
+        // Consent ID with special characters that need URL encoding
+        RequestForEnrichConsentCreationResponse data = new RequestForEnrichConsentCreationResponse();
+        data.setConsentId("consent&id=123+test");
+        requestBody.setData(data);
+
+        // Act
+        ResponseEntity<Response200ForResponseAlternation> response = 
+            controller.enrichConsentCreationResponsePost(requestBody);
+
+        // Assert
+        assertNotNull(response);
+        Response200ForResponseAlternation responseBody = response.getBody();
+        assertNotNull(responseBody);
+        
+        SuccessResponseForResponseAlternation successResponse = (SuccessResponseForResponseAlternation) responseBody;
+        SuccessResponseForResponseAlternationData responseData = successResponse.getData();
+        
+        // Verify special characters are URL encoded
+        assertNotNull(responseData.getScaRedirectUrl());
+        String redirectUrl = responseData.getScaRedirectUrl();
+        
+        // Verify the URL contains encoded characters, not raw special characters
+        assertFalse(redirectUrl.contains("consent&id=123+test"), "URL should have encoded special characters");
+        assertTrue(redirectUrl.contains("consent%26id%3D123%2Btest"), "URL should contain properly encoded consentId");
+    }
 }
