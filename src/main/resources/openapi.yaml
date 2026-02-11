@@ -687,6 +687,93 @@ paths:
       - application/json
       x-tags:
       - tag: Consent
+  /get-consent-content:
+    post:
+      requestBody:
+        content:
+          application/json:
+            examples:
+              GetConsentContent:
+                summary: Get Consent Content Request
+                value:
+                  requestId: Ec1wMjmiG8
+                  data:
+                    consentId: consent-12345
+                    requestHeaders: {}
+                    consentResourcePath: /account-access-consents
+            schema:
+              $ref: "#/components/schemas/GetConsentContentRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                ConsentACTV:
+                  summary: Consent with ACTV Status
+                  value:
+                    responseId: Ec1wMjmiG8
+                    status: SUCCESS
+                    data:
+                      consentStatus: ACTV
+                      consentId: consent-12345
+                      statusDescription: "Consent is active"
+                      consentDetails:
+                        validUntil: "2026-12-31T23:59:59Z"
+                        permissions:
+                          - "ReadAccountsBasic"
+                          - "ReadBalances"
+                ConsentRJCT:
+                  summary: Consent with RJCT Status
+                  value:
+                    responseId: Ec1wMjmiG8
+                    status: SUCCESS
+                    data:
+                      consentStatus: RJCT
+                      consentId: consent-12345
+                      statusDescription: "Consent has been rejected"
+                      rejectionReason: "User denied consent"
+              schema:
+                $ref: "#/components/schemas/Response200ForGetConsentContent"
+          description: Ok - Returns consent content with ACTV or RJCT status
+        "400":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: invalid_request
+                errorDescription: Data is missing
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: server_error
+                errorDescription: Failed to process the response
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Server Error
+      summary: Get consent content with ACTV or RJCT status as per Berlin Group specification
+      description: |
+        This endpoint responds to GET Consent-Content Requests with HTTP Status Code 200 (OK) 
+        containing ACTV (Active) or RJCT (Rejected) status information. This complies with 
+        Berlin Group PSD2 Account Information Consent Flow diagram requirements.
+        
+        The ASPSP returns consent status information including:
+        - ACTV: Consent is active and valid
+        - RJCT: Consent has been rejected
+      tags:
+      - Consent
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Consent
   /validate-consent-file-retrieval:
     post:
       requestBody:
@@ -2406,6 +2493,115 @@ components:
       - $ref: "#/components/schemas/SuccessResponseForConsentSearch"
       - $ref: "#/components/schemas/FailedResponse"
       x-one-of-name: Response200ForConsentSearch
+    Response200ForGetConsentContent:
+      oneOf:
+      - $ref: "#/components/schemas/SuccessResponseForGetConsentContent"
+      - $ref: "#/components/schemas/FailedResponse"
+      x-one-of-name: Response200ForGetConsentContent
+    GetConsentContentRequestBody:
+      example:
+        requestId: Ec1wMjmiG8
+        data:
+          consentId: consent-12345
+          requestHeaders: {}
+          consentResourcePath: /account-access-consents
+      properties:
+        requestId:
+          description: A unique correlation identifier
+          example: Ec1wMjmiG8
+          type: string
+        data:
+          $ref: "#/components/schemas/GetConsentContentRequestBodyData"
+      required:
+      - data
+      - requestId
+      type: object
+    GetConsentContentRequestBodyData:
+      description: Request data for retrieving consent content
+      example:
+        consentId: consent-12345
+        requestHeaders: {}
+        consentResourcePath: /account-access-consents
+      properties:
+        consentId:
+          description: The unique identifier of the consent
+          type: string
+        requestHeaders:
+          description: Request headers sent by the TPP
+          type: object
+        consentResourcePath:
+          description: To identify requested consent type
+          type: string
+      required:
+      - consentId
+      type: object
+    SuccessResponseForGetConsentContent:
+      example:
+        responseId: Ec1wMjmiG8
+        status: SUCCESS
+        data:
+          consentStatus: ACTV
+          consentId: consent-12345
+          statusDescription: Consent is active
+          consentDetails:
+            validUntil: 2026-12-31T23:59:59Z
+            permissions:
+            - ReadAccountsBasic
+            - ReadBalances
+      properties:
+        responseId:
+          type: string
+        status:
+          enum:
+          - SUCCESS
+          type: string
+        data:
+          $ref: "#/components/schemas/ConsentContentData"
+      required:
+      - data
+      - responseId
+      - status
+      type: object
+    ConsentContentData:
+      description: Consent content data containing status information (ACTV or RJCT)
+      example:
+        consentStatus: ACTV
+        consentId: consent-12345
+        statusDescription: Consent is active
+        consentDetails:
+          validUntil: 2026-12-31T23:59:59Z
+          permissions:
+          - ReadAccountsBasic
+          - ReadBalances
+      properties:
+        consentStatus:
+          description: |
+            The status of the consent as per Berlin Group specification:
+            - ACTV: Consent is active and valid
+            - RJCT: Consent has been rejected
+          enum:
+          - ACTV
+          - RJCT
+          - RCVD
+          - PDNG
+          - EXPD
+          type: string
+        consentId:
+          description: The unique identifier of the consent
+          type: string
+        statusDescription:
+          description: Human-readable description of the consent status
+          type: string
+        consentDetails:
+          description: Additional consent details
+          type: object
+        rejectionReason:
+          description: Reason for rejection when status is RJCT
+          type: string
+      required:
+      - consentStatus
+      - consentId
+      type: object
     Response200:
       oneOf:
       - $ref: "#/components/schemas/SuccessResponse"
