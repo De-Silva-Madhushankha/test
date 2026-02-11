@@ -732,6 +732,51 @@ paths:
       - application/json
       x-tags:
       - tag: Consent
+  /get-consent-content:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetConsentContentRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response200ForGetConsentContent"
+          description: Ok
+        "400":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: invalid_request
+                errorDescription: Data is missing
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: server_error
+                errorDescription: Failed to process the response
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Server Error
+      summary: Handle GET consent content requests from AISP
+      tags:
+      - Consent
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Consent
   /pre-process-consent-revoke:
     post:
       requestBody:
@@ -1804,6 +1849,27 @@ components:
       - responseId
       - status
       type: object
+    SuccessResponseGetConsentContent:
+      example:
+        data:
+          consentContent: "{}"
+          responseHeaders: "{}"
+        responseId: responseId
+        status: SUCCESS
+      properties:
+        responseId:
+          type: string
+        status:
+          enum:
+          - SUCCESS
+          type: string
+        data:
+          $ref: "#/components/schemas/SuccessResponseGetConsentContentData"
+      required:
+      - data
+      - responseId
+      - status
+      type: object
     SuccessResponsePopulateConsentAuthorizeScreen:
       example:
         data:
@@ -2216,6 +2282,41 @@ components:
       - data
       - requestId
       type: object
+    GetConsentContentRequestBody:
+      example:
+        data:
+          consentId: consentId
+          requestHeaders: "{}"
+          consentResourcePath: consentResourcePath
+        requestId: Ec1wMjmiG8
+      properties:
+        requestId:
+          description: A unique correlation identifier
+          example: Ec1wMjmiG8
+          type: string
+        data:
+          $ref: "#/components/schemas/GetConsentContentData"
+      required:
+      - data
+      - requestId
+      type: object
+    GetConsentContentData:
+      description: Defines the context data for GET consent content requests
+      example:
+        consentId: consentId
+        requestHeaders: "{}"
+        consentResourcePath: consentResourcePath
+      properties:
+        consentId:
+          description: The consent identifier
+          type: string
+        requestHeaders:
+          description: Request headers sent by the AISP
+          type: object
+        consentResourcePath:
+          description: Path to identify the consent resource type
+          type: string
+      type: object
     EnrichConsentSearchRequestBody:
       example:
         data:
@@ -2481,6 +2582,11 @@ components:
       - $ref: "#/components/schemas/SuccessResponseConsentRevocation"
       - $ref: "#/components/schemas/FailedResponse"
       x-one-of-name: Response200ForConsentRevocation
+    Response200ForGetConsentContent:
+      oneOf:
+      - $ref: "#/components/schemas/SuccessResponseGetConsentContent"
+      - $ref: "#/components/schemas/FailedResponse"
+      x-one-of-name: Response200ForGetConsentContent
     Response200ForPopulateConsentAuthorizeScreen:
       oneOf:
       - $ref: "#/components/schemas/SuccessResponsePopulateConsentAuthorizeScreen"
@@ -2497,6 +2603,18 @@ components:
         requireTokenRevocation:
           description: Require access token to be revoked
           type: string
+      type: object
+    SuccessResponseGetConsentContentData:
+      example:
+        consentContent: "{}"
+        responseHeaders: "{}"
+      properties:
+        consentContent:
+          description: The consent content data retrieved
+          type: object
+        responseHeaders:
+          description: Headers to be included in the response
+          type: object
       type: object
     SuccessResponseForResponseAlternationData:
       example:
