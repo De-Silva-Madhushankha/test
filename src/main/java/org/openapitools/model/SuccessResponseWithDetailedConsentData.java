@@ -20,7 +20,7 @@ import javax.annotation.Generated;
  * SuccessResponseWithDetailedConsentData
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:36:18.697163376Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:37:25.744256203Z[Etc/UTC]")
 public class SuccessResponseWithDetailedConsentData implements SuccessResponsePersistAuthorizedConsentData {
 
   private DetailedConsentResourceData consentResource;

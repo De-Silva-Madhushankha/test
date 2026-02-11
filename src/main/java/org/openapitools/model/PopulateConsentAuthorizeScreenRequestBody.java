@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  * PopulateConsentAuthorizeScreenRequestBody
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:36:18.697163376Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:37:25.744256203Z[Etc/UTC]")
 public class PopulateConsentAuthorizeScreenRequestBody {
 
   private String requestId;
