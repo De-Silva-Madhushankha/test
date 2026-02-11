@@ -977,6 +977,67 @@ paths:
       - application/json
       x-tags:
       - tag: Consent
+  /get-consent-status:
+    post:
+      requestBody:
+        content:
+          application/json:
+            example:
+              requestId: Ec1wMjmiG8
+              data:
+                consentId: 7890-asdf-4567
+                clientId: client123
+            schema:
+              $ref: "#/components/schemas/ConsentStatusRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: SUCCESS
+                data:
+                  consentStatus: authorised
+                  consentId: 7890-asdf-4567
+                  _links:
+                    self:
+                      href: "/consents/7890-asdf-4567/status"
+                    consent:
+                      href: "/consents/7890-asdf-4567"
+              schema:
+                $ref: "#/components/schemas/ConsentStatusResponse"
+          description: OK - Consent status retrieved successfully with HATEOAS links
+        "400":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: invalid_request
+                errorDescription: Consent ID is missing or invalid
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "500":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: server_error
+                errorDescription: Failed to retrieve consent status
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Server Error
+      summary: Retrieve consent status with HATEOAS status information
+      tags:
+      - Consent
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Consent
   /issue-refresh-token:
     post:
       requestBody:
@@ -2347,6 +2408,131 @@ components:
       required:
       - data
       - requestId
+      type: object
+    ConsentStatusRequestBody:
+      description: Request body for consent status retrieval
+      example:
+        data:
+          consentId: 7890-asdf-4567
+          clientId: client123
+        requestId: Ec1wMjmiG8
+      properties:
+        requestId:
+          description: A unique correlation identifier
+          example: Ec1wMjmiG8
+          type: string
+        data:
+          $ref: "#/components/schemas/ConsentStatusRequestData"
+      required:
+      - data
+      - requestId
+      type: object
+    ConsentStatusRequestData:
+      description: Data for consent status request
+      example:
+        consentId: 7890-asdf-4567
+        clientId: client123
+      properties:
+        consentId:
+          description: The consent identifier
+          type: string
+        clientId:
+          description: The client identifier
+          type: string
+      required:
+      - consentId
+      type: object
+    ConsentStatusResponse:
+      description: Response containing consent status with HATEOAS links
+      example:
+        data:
+          consentStatus: authorised
+          consentId: 7890-asdf-4567
+          _links:
+            self:
+              href: "/consents/7890-asdf-4567/status"
+            consent:
+              href: "/consents/7890-asdf-4567"
+        responseId: Ec1wMjmiG8
+        status: SUCCESS
+      properties:
+        responseId:
+          description: A unique correlation identifier
+          type: string
+        status:
+          description: Indicates the outcome of the request
+          enum:
+          - SUCCESS
+          - ERROR
+          type: string
+        data:
+          $ref: "#/components/schemas/ConsentStatusData"
+      required:
+      - responseId
+      - status
+      type: object
+    ConsentStatusData:
+      description: Consent status information with HATEOAS links
+      example:
+        consentStatus: authorised
+        consentId: 7890-asdf-4567
+        _links:
+          self:
+            href: "/consents/7890-asdf-4567/status"
+          consent:
+            href: "/consents/7890-asdf-4567"
+      properties:
+        consentId:
+          description: The consent identifier
+          type: string
+        consentStatus:
+          description: "Current status of the consent (e.g., received, valid, rejected, authorised, terminated)"
+          type: string
+          enum:
+          - received
+          - valid
+          - rejected
+          - authorised
+          - revoked
+          - expired
+          - terminatedByTpp
+        _links:
+          description: HATEOAS links for navigation
+          $ref: "#/components/schemas/HATEOASLinks"
+      required:
+      - consentId
+      - consentStatus
+      - _links
+      type: object
+    HATEOASLinks:
+      description: Hypermedia links following HATEOAS principle
+      example:
+        self:
+          href: "/consents/7890-asdf-4567/status"
+        consent:
+          href: "/consents/7890-asdf-4567"
+      properties:
+        self:
+          $ref: "#/components/schemas/HATEOASLink"
+        consent:
+          $ref: "#/components/schemas/HATEOASLink"
+        scaStatus:
+          $ref: "#/components/schemas/HATEOASLink"
+        scaOAuth:
+          $ref: "#/components/schemas/HATEOASLink"
+      required:
+      - self
+      type: object
+    HATEOASLink:
+      description: A hypermedia link
+      example:
+        href: "/consents/7890-asdf-4567"
+      properties:
+        href:
+          description: The URI of the linked resource
+          type: string
+      required:
+      - href
       type: object
     IssueRefreshTokenRequestBody:
       example:
