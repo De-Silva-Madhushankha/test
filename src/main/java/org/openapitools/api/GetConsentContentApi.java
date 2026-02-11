@@ -89,16 +89,6 @@ public interface GetConsentContentApi {
                     ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"data\" : \"{}\", \"status\" : \"ERROR\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"data\" : \"{}\", \"status\" : \"ERROR\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
-                    break;
-                }
             }
         });
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
