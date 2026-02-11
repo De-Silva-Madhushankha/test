@@ -2486,7 +2486,7 @@ components:
           description: The consent identifier
           type: string
         consentStatus:
-          description: "Current status of the consent (e.g., received, valid, rejected, authorised, terminated)"
+          description: "Current status of the consent (e.g., received, valid, rejected, authorised, revoked, expired, terminatedByTpp)"
           type: string
           enum:
           - received
