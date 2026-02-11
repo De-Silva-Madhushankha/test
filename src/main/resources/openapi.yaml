@@ -687,6 +687,91 @@ paths:
       - application/json
       x-tags:
       - tag: Consent
+  /consent-status-request:
+    post:
+      requestBody:
+        content:
+          application/json:
+            example:
+              requestId: Ec1wMjmiG8
+              data:
+                consentId: 550e8400-e29b-41d4-a716-446655440000
+                clientId: client123
+                requestHeaders:
+                  X-Request-ID: 99391c7e-ad88-49ec-a2ad-99ddcb1f7721
+            schema:
+              $ref: "#/components/schemas/ConsentStatusRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: SUCCESS
+                data:
+                  consentId: 550e8400-e29b-41d4-a716-446655440000
+                  consentStatus: valid
+                  statusUpdateDateTime: "2024-02-10T10:30:00Z"
+                  consentDetails:
+                    type: accounts
+                    validityTime: 1707566200
+                    recurringIndicator: true
+              schema:
+                $ref: "#/components/schemas/Response200ForConsentStatus"
+          description: Ok
+        "400":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: invalid_request
+                errorDescription: Consent ID is missing or invalid
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Bad Request
+        "404":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: consent_not_found
+                errorDescription: The requested consent does not exist
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Consent Not Found
+        "500":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                errorMessage: server_error
+                errorDescription: Failed to process the consent status request
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Server Error
+      summary: Request consent status information for AISP
+      description: |
+        This endpoint allows an AISP (Account Information Service Provider) to request the current status 
+        of a consent. This implements the Berlin Group requirement for consent status request functionality.
+        
+        The AISP can use this endpoint to:
+        - Check the current status of a consent (e.g., received, valid, rejected, revoked, expired)
+        - Retrieve metadata about the consent including validity time and type
+        - Verify consent state before attempting to access account information
+        
+        **Berlin Group Compliance**: This endpoint fulfills REQ_0008 which requires AISPs to support 
+        Consent Status Request functionality as shown in the Account Information Consent Flow diagram.
+      tags:
+      - Consent
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: Consent
   /validate-consent-file-retrieval:
     post:
       requestBody:
@@ -2215,6 +2300,133 @@ components:
       required:
       - data
       - requestId
+      type: object
+    ConsentStatusRequestBody:
+      example:
+        requestId: Ec1wMjmiG8
+        data:
+          consentId: 550e8400-e29b-41d4-a716-446655440000
+          clientId: client123
+          requestHeaders:
+            X-Request-ID: 99391c7e-ad88-49ec-a2ad-99ddcb1f7721
+      properties:
+        requestId:
+          description: A unique correlation identifier for this consent status request
+          example: Ec1wMjmiG8
+          type: string
+        data:
+          $ref: "#/components/schemas/ConsentStatusRequestData"
+      required:
+      - data
+      - requestId
+      type: object
+    ConsentStatusRequestData:
+      description: Data payload for consent status request
+      example:
+        consentId: 550e8400-e29b-41d4-a716-446655440000
+        clientId: client123
+        requestHeaders:
+          X-Request-ID: 99391c7e-ad88-49ec-a2ad-99ddcb1f7721
+      properties:
+        consentId:
+          description: The unique identifier of the consent to query status for
+          type: string
+        clientId:
+          description: The client ID of the AISP making the status request
+          type: string
+        requestHeaders:
+          description: Request headers sent by the AISP for the status request
+          type: object
+      required:
+      - consentId
+      type: object
+    Response200ForConsentStatus:
+      oneOf:
+      - $ref: "#/components/schemas/SuccessResponseForConsentStatus"
+      - $ref: "#/components/schemas/FailedResponse"
+      x-one-of-name: Response200ForConsentStatus
+    SuccessResponseForConsentStatus:
+      example:
+        responseId: responseId
+        status: SUCCESS
+        data:
+          consentId: 550e8400-e29b-41d4-a716-446655440000
+          consentStatus: valid
+          statusUpdateDateTime: "2024-02-10T10:30:00Z"
+          consentDetails:
+            type: accounts
+            validityTime: 1707566200
+            recurringIndicator: true
+      properties:
+        responseId:
+          description: Correlation identifier matching the request
+          type: string
+        status:
+          enum:
+          - SUCCESS
+          type: string
+        data:
+          $ref: "#/components/schemas/ConsentStatusResponseData"
+      required:
+      - data
+      - responseId
+      - status
+      type: object
+    ConsentStatusResponseData:
+      description: Response data containing consent status information
+      example:
+        consentId: 550e8400-e29b-41d4-a716-446655440000
+        consentStatus: authorised
+        statusUpdateDateTime: "2024-02-10T10:30:00Z"
+        consentDetails:
+          type: accounts
+          validityTime: 1707566200
+          recurringIndicator: true
+      properties:
+        consentId:
+          description: The unique identifier of the consent
+          type: string
+        consentStatus:
+          description: |
+            Current status of the consent. Possible values based on Berlin Group specification:
+            - received: Consent has been received but not yet authorized
+            - valid: Consent is authorized and valid for use
+            - rejected: Consent has been rejected by the PSU
+            - revoked: Consent has been revoked by the PSU
+            - expired: Consent validity period has expired
+            - terminatedByTpp: Consent has been terminated by the TPP
+          type: string
+          enum:
+          - received
+          - valid
+          - rejected
+          - revoked
+          - expired
+          - terminatedByTpp
+        statusUpdateDateTime:
+          description: ISO 8601 timestamp when the consent status was last updated
+          type: string
+          format: date-time
+        consentDetails:
+          description: Additional metadata about the consent
+          type: object
+          properties:
+            type:
+              description: Type of consent (e.g., accounts, payments)
+              type: string
+            validityTime:
+              description: Timestamp when the consent expires
+              type: integer
+              format: int64
+            recurringIndicator:
+              description: Indicates if consent is for recurring access
+              type: boolean
+            frequency:
+              description: Maximum frequency per day for access
+              type: integer
+      required:
+      - consentId
+      - consentStatus
       type: object
     EnrichConsentSearchRequestBody:
       example:
