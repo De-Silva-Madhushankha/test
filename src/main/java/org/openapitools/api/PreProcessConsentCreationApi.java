@@ -51,6 +51,9 @@ public interface PreProcessConsentCreationApi {
      * @param preProcessConsentCreationRequestBody  (required)
      * @return Ok (status code 200)
      *         or Bad Request (status code 400)
+     *         or Unauthorized (status code 401)
+     *         or Forbidden (status code 403)
+     *         or Not Acceptable (status code 406)
      *         or Server Error (status code 500)
      */
     @Operation(
@@ -62,6 +65,15 @@ public interface PreProcessConsentCreationApi {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = Response200ForPreProcessConsentCreation.class))
             }),
             @ApiResponse(responseCode = "400", description = "Bad Request", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "406", description = "Not Acceptable", content = {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             }),
             @ApiResponse(responseCode = "500", description = "Server Error", content = {

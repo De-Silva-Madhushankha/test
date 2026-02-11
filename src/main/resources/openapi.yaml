@@ -486,6 +486,42 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                data:
+                  errorMessage: unauthorized
+                  errorDescription: The request lacks valid authentication credentials or the credentials have expired
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                data:
+                  errorMessage: forbidden
+                  errorDescription: The authenticated client does not have permission to access this resource
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "406":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                data:
+                  errorMessage: not_acceptable
+                  errorDescription: The requested content type or format is not supported
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not Acceptable
         "500":
           content:
             application/json:
@@ -531,6 +567,42 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
           description: Bad Request
+        "401":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                data:
+                  errorMessage: unauthorized
+                  errorDescription: The request lacks valid authentication credentials or the credentials have expired
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                data:
+                  errorMessage: forbidden
+                  errorDescription: The authenticated client does not have permission to access this resource
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Forbidden
+        "406":
+          content:
+            application/json:
+              example:
+                responseId: Ec1wMjmiG8
+                status: ERROR
+                data:
+                  errorMessage: not_acceptable
+                  errorDescription: The requested content type or format is not supported
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+          description: Not Acceptable
         "500":
           content:
             application/json:
