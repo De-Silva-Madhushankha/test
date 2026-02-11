@@ -23,6 +23,33 @@
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>7.2.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/openapi.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <output>${project.basedir}</output>
+                            <apiPackage>org.openapitools.api</apiPackage>
+                            <modelPackage>org.openapitools.model</modelPackage>
+                            <generateApis>false</generateApis>
+                            <generateModels>true</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <configOptions>
+                                <delegatePattern>true</delegatePattern>
+                                <interfaceOnly>true</interfaceOnly>
+                                <useSpringBoot3>false</useSpringBoot3>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
