@@ -23,7 +23,7 @@ import javax.annotation.Generated;
  */
 
 @JsonTypeName("SuccessResponseForEventWithDetails_data")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:37:25.744256203Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:39:58.298459337Z[Etc/UTC]")
 public class SuccessResponseForEventWithDetailsData {
 
   private String callbackUrl;

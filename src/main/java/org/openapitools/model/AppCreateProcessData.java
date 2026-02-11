@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  */
 
 @Schema(name = "AppCreateProcessData", description = "Defines the context data related to the application registration.")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:37:25.744256203Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:39:58.298459337Z[Etc/UTC]")
 public class AppCreateProcessData {
 
   private Object appData;

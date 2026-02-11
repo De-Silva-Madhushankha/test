@@ -29,7 +29,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 
 @Schema(name = "SuccessResponsePopulateConsentAuthorizeScreenData_consumerData", description = "Consumer related data fetched from the banking backend.")
 @JsonTypeName("SuccessResponsePopulateConsentAuthorizeScreenData_consumerData")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:37:25.744256203Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:39:58.298459337Z[Etc/UTC]")
 public class SuccessResponsePopulateConsentAuthorizeScreenDataConsumerData {
 
   @Valid

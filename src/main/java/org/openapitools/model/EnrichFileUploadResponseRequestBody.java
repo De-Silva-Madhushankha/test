@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  * EnrichFileUploadResponseRequestBody
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:37:25.744256203Z[Etc/UTC]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2026-02-11T10:39:58.298459337Z[Etc/UTC]")
 public class EnrichFileUploadResponseRequestBody {
 
   private String requestId;
